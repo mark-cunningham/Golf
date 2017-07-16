@@ -22,6 +22,7 @@ SLIDERLEFT = 20
 METERLEFT = SLIDERLEFT + SLIDERBORDER
 METERTOP = SCOREBOARDHEIGHT + 20
 METERMAX = 30
+METERMIN = 1
 
 SLIDERSTEP = 10
 SLIDERSPEED = 10
@@ -53,14 +54,14 @@ font = pygame.font.SysFont("Helvetica", 16)
 
 def main():
 
-# Load images
-    background_image = pygame.image.load("golf background.png")
-    power_meter_image = pygame.image.load("power meter.png")
-    slider_image = pygame.image.load("slider.png")
-    ball_image = pygame.image.load("ball.png")
-    flag_1_image = pygame.image.load("flag 1.png")
-    flag_2_image = pygame.image.load("flag 2.png")
-    flag_3_image = pygame.image.load("flag 3.png")
+    # Load images
+    background_image = pygame.image.load("golf background.png").convert()
+    power_meter_image = pygame.image.load("power meter.png").convert()
+    slider_image = pygame.image.load("slider.png").convert_alpha()
+    ball_image = pygame.image.load("ball.png").convert_alpha()
+    flag_1_image = pygame.image.load("flag 1.png").convert_alpha()
+    flag_2_image = pygame.image.load("flag 2.png").convert_alpha()
+    flag_3_image = pygame.image.load("flag 3.png").convert_alpha()
 
 
     # Initialise variables
@@ -187,7 +188,7 @@ def main():
                     slider_direction = "DOWN"
             elif slider_direction == "DOWN":
                 shot_power = shot_power - 1
-                if shot_power == 1:
+                if shot_power == METERMIN:
                     slider_direction = "UP"
 
             if slider_speed_boost is True:
@@ -253,47 +254,47 @@ def main():
             game_screen.blit(ball_image, [ball_x,BALLY + BALLDESCENT])
 
         # Display scores and level
-        scoreboard_background_rect = (0, 0, SCREENWIDTH, SCOREBOARDHEIGHT)
-        pygame.draw.rect(game_screen, GREYBLUE, scoreboard_background_rect)
-
-        display_scoreboard_data("Hole:", 0, 0)
-        for hole_number in range(0, 3):
-            display_scoreboard_data(str(hole_number + 1), hole_number + 1, 0)
-
-        display_scoreboard_data("Total", 6, 0)
-        display_scoreboard_data("Best", 7, 0)
-
-        display_scoreboard_data("Strokes:", 0, 1)
-        if hole_1_strokes > 0:
-            display_scoreboard_data(str(hole_1_strokes), 1, 1)
-        else:
-            display_scoreboard_data(str("-"), 1, 1)
-
-        if hole_2_strokes > 0:
-            display_scoreboard_data(str(hole_2_strokes), 2, 1)
-        else:
-            display_scoreboard_data(str("-"), 2, 1)
-
-        if hole_3_strokes > 0:
-            display_scoreboard_data(str(hole_3_strokes), 3, 1)
-        else:
-            display_scoreboard_data(str("-"), 3, 1)
-
-        if round_strokes > 0:
-            display_scoreboard_data(str(round_strokes), 6, 1)
-        else:
-            display_scoreboard_data(str("-"), 6, 1)
-
-        if best_round_strokes > 0:
-            display_scoreboard_data(str(best_round_strokes), 7, 1)
-        else:
-            display_scoreboard_data(str("-"), 7, 1)
-
-
+        display_scoreboard(hole_1_strokes, hole_2_strokes, hole_3_strokes, round_strokes, best_round_strokes)
 
         pygame.display.update()
         clock.tick(30)
 
+def display_scoreboard(h1, h2, h3, round, best):
+    scoreboard_background_rect = (0, 0, SCREENWIDTH, SCOREBOARDHEIGHT)
+    pygame.draw.rect(game_screen, GREYBLUE, scoreboard_background_rect)
+
+    display_scoreboard_data("Hole:", 0, 0)
+    for hole_number in range(0, 3):
+        display_scoreboard_data(str(hole_number + 1), hole_number + 1, 0)
+
+    display_scoreboard_data("Total", 6, 0)
+    display_scoreboard_data("Best", 7, 0)
+
+    display_scoreboard_data("Strokes:", 0, 1)
+    if h1 > 0:
+        display_scoreboard_data(str(h1), 1, 1)
+    else:
+        display_scoreboard_data(str("-"), 1, 1)
+
+    if h2 > 0:
+        display_scoreboard_data(str(h2), 2, 1)
+    else:
+        display_scoreboard_data(str("-"), 2, 1)
+
+    if h3 > 0:
+        display_scoreboard_data(str(h3), 3, 1)
+    else:
+        display_scoreboard_data(str("-"), 3, 1)
+
+    if round > 0:
+        display_scoreboard_data(str(round), 6, 1)
+    else:
+        display_scoreboard_data(str("-"), 6, 1)
+
+    if best > 0:
+        display_scoreboard_data(str(best), 7, 1)
+    else:
+        display_scoreboard_data(str("-"), 7, 1)
 
 def display_scoreboard_data(scoreboard_text, column, line):
     display_text = font.render(scoreboard_text, True, (WHITE))
