@@ -51,6 +51,8 @@ HOLE_CENTRE = 8
 
 # Setup
 os.environ['SDL_VIDEO_CENTERED'] = '1'
+pygame.mixer.pre_init(44100, -16, 2, 512)
+pygame.mixer.init()
 pygame.init()
 game_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Golf')
@@ -66,6 +68,10 @@ ball_image = pygame.image.load('ball.png').convert_alpha()
 flag_1_image = pygame.image.load('flag_1.png').convert_alpha()
 flag_2_image = pygame.image.load('flag_2.png').convert_alpha()
 flag_3_image = pygame.image.load('flag_3.png').convert_alpha()
+
+# Load sounds
+putt_sound = pygame.mixer.Sound('putt.ogg')
+clap_sound = pygame.mixer.Sound('clap.ogg')
 
 
 def main():
@@ -110,6 +116,8 @@ def main():
                     final_ball_location += shot_power
                 else:
                     final_ball_location -= shot_power
+
+                putt_sound.play()
 
             # RETURN pressed when ball is in the hole - start new hole
             elif key_pressed[pygame.K_RETURN] and in_the_hole is True:
@@ -199,6 +207,8 @@ def main():
                     if final_ball_location == flag_distance:
                         in_the_hole = True
                         round_strokes += hole_strokes[hole - 1]
+
+                        clap_sound.play()
 
                     # Ball missed hole
                     else:
